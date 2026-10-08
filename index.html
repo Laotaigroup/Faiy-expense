@@ -341,7 +341,9 @@ $("#loginForm").addEventListener("submit", async e => {
   });
   btn.disabled = false; btn.textContent = "ເຂົ້າສູ່ລະບົບ";
   if (error) {
-    err.textContent = "ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ";
+    err.textContent = /invalid login/i.test(error.message)
+      ? "ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ"
+      : "ເຂົ້າສູ່ລະບົບບໍ່ໄດ້: " + error.message;
     err.classList.remove("hidden");
   }
 });
