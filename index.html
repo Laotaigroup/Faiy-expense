@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="lo">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ລາຍຈ່າຍນ້ອງ</title>
+<meta name="theme-color" content="#A8321C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ລາຍຈ່າຍນ້ອງ">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<!-- ຟອນລາວ: ໂຫຼດແບບບໍ່ບລັອກ, ຖ້າໂຫຼດບໍ່ໄດ້ຈະໃຊ້ຟອນຂອງເຄື່ອງ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-lao@5.2.8/400.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-lao@5.2.8/600.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-lao@5.2.8/700.css" media="print" onload="this.media='all'">
+<style>
+:root{
+  --paper:#F5F1EA; --card:#FFFFFF; --ink:#1D1A17; --muted:#665E55; --line:#E3DCD1;
+  --red:#A8321C; --red-ink:#8C2914; --red-soft:#F6E3DC;
+  --jade:#1E6B57; --jade-soft:#DCEDE6;
+  --amber:#7D5200; --amber-soft:#FBEED3;
+  --shadow:0 1px 2px rgba(29,26,23,.06),0 4px 16px rgba(29,26,23,.06);
+  --radius:16px;
+  --font:"Noto Sans Lao","Lao Sangam MN","Phetsarath OT","Saysettha OT",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#16130F; --card:#221E19; --ink:#F3EEE6; --muted:#ABA196; --line:#3A332B;
+    --red:#D9583C; --red-ink:#F08A70; --red-soft:#3B1E16;
+    --jade:#5BB79A; --jade-soft:#17332A;
+    --amber:#E8B65A; --amber-soft:#3A2C12;
+    --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:5;background:var(--paper);padding-top:env(safe-area-inset-top)}
+.top-row{display:flex;align-items:center;gap:8px;min-height:56px}
+.brand{font-weight:700;font-size:18px;flex:1;display:flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:700}
+.icon-btn{width:44px;height:44px;border:0;background:transparent;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
+.icon-btn:active{background:var(--line)}
+.icon-btn svg{width:22px;height:22px}
+.month-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0 12px}
+.month-bar .label{font-weight:600;font-size:16px}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.hero .k{font-size:14px;color:var(--muted)}
+.hero .big{font-size:40px;font-weight:700;line-height:1.15;margin:4px 0 2px}
+.hero .sub{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat .k{font-size:13px;color:var(--muted)}
+.stat .v{font-size:22px;font-weight:700;margin-top:2px}
+.stat.pending{background:var(--amber-soft);border-color:transparent}
+.stat.pending .k,.stat.pending .v{color:var(--amber)}
+.section-title{font-size:15px;font-weight:600;margin:20px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.section-title small{font-weight:400;color:var(--muted);font-size:13px}
+
+/* category bars */
+.cat-row{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:6px 0;font-size:14px}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--red);border-radius:6px}
+
+/* list */
+.day-head{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:18px 4px 6px}
+.items{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:0;border-top:1px solid var(--line);background:transparent;width:100%;text-align:left;min-height:60px}
+.item:first-child{border-top:0}
+.item:active{background:var(--paper)}
+.dot{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;font-size:13px;font-weight:700;color:#fff}
+.item .mid{flex:1;min-width:0}
+.item .t{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .m{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.item .amt{font-weight:600;font-size:16px}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+.tag.pending{background:var(--amber-soft);color:var(--amber)}
+.tag.done{background:var(--jade-soft);color:var(--jade)}
+.empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:15px}
+
+/* claims */
+.claim-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);min-height:60px}
+.claim-item:first-child{border-top:0}
+.claim-item input[type=checkbox]{width:22px;height:22px;accent-color:var(--red);flex:none}
+.claim-item .mid{flex:1;min-width:0}
+.link-btn{border:0;background:transparent;color:var(--red-ink);font-size:13px;padding:6px 0;text-decoration:underline;min-height:32px}
+.seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--line);border-radius:12px;padding:4px;gap:4px;margin:4px 0 12px}
+.seg button{border:0;border-radius:9px;background:transparent;padding:10px;font-weight:600;font-size:14px;min-height:44px}
+.seg button[aria-pressed=true]{background:var(--card);box-shadow:var(--shadow)}
+
+/* buttons */
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:600;font-size:15px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--red);color:#fff}
+.btn.primary:disabled{opacity:.5}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.danger{background:transparent;color:var(--red-ink);border:1px solid var(--line)}
+.btn.block{width:100%}
+.btn.jade{background:var(--jade);color:#fff}
+.row-btns{display:flex;gap:10px;flex-wrap:wrap}
+.row-btns .btn{flex:1}
+
+/* bottom nav */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items:center;height:68px;padding:0 8px}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--muted);min-height:56px;justify-content:center}
+.tab svg{width:22px;height:22px}
+.tab[aria-current=page]{color:var(--red-ink);font-weight:600}
+.fab{justify-self:center;width:58px;height:58px;border-radius:18px;border:0;background:var(--red);color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(168,50,28,.35);margin-top:-22px}
+.fab svg{width:28px;height:28px}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(20,16,12,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:560px;border-radius:22px 22px 0 0;max-height:92vh;overflow:auto;padding:8px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:6px auto 10px}
+.sheet h2{font-size:18px;margin:4px 0 14px;display:flex;justify-content:space-between;align-items:center}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field>label,.field>.lbl{font-size:13px;color:var(--muted);font-weight:600}
+.input{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:12px 14px;font-size:16px;min-height:48px;width:100%}
+.input:focus{outline:2px solid var(--red);outline-offset:1px;border-color:transparent}
+.amount-wrap{position:relative}
+.amount-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:24px;font-weight:700;color:var(--muted)}
+.amount-wrap input{font-size:28px;font-weight:700;padding-left:40px;min-height:60px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px;font-size:14px;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-bottom:14px}
+.switch-row .txt{font-size:15px;font-weight:600}
+.switch-row .txt small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.switch{position:relative;width:52px;height:32px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.switch span{position:absolute;inset:0;pointer-events:none;background:var(--line);border-radius:999px;transition:.2s}
+.switch span::after{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch input:checked+span{background:var(--red)}
+.switch input:checked+span::after{transform:translateX(20px)}
+.switch input:focus-visible+span{outline:2px solid var(--red);outline-offset:2px}
+.receipt-box{border:1.5px dashed var(--line);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center}
+.receipt-box img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--line)}
+.receipt-box .btn{min-height:44px;padding:8px 14px;font-size:14px}
+
+/* receipt viewer */
+.viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.9);display:flex;flex-direction:column}
+.viewer img{flex:1;object-fit:contain;width:100%;min-height:0}
+.viewer .icon-btn{color:#fff;align-self:flex-end;margin:calc(8px + env(safe-area-inset-top)) 8px 0}
+
+/* login */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login .card{width:100%;max-width:400px;padding:28px 22px}
+.login h1{font-size:24px;margin:14px 0 4px}
+.login p{color:var(--muted);margin:0 0 20px;font-size:14px}
+.err{color:var(--red-ink);font-size:14px;margin:0 0 12px}
+
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:12px;font-size:14px;z-index:40;max-width:90vw;box-shadow:var(--shadow)}
+.loading{text-align:center;padding:48px;color:var(--muted)}
+.footnote{font-size:12px;color:var(--muted);margin:8px 4px}
+</style>
+</head>
+<body>
+
+<!-- ===== Login ===== -->
+<section id="loginView" class="login hidden">
+  <form class="card" id="loginForm" novalidate>
+    <div class="brand-mark" style="width:48px;height:48px;border-radius:14px;font-size:24px">¥</div>
+    <h1>ລາຍຈ່າຍນ້ອງ</h1>
+    <p>ບັນທຶກລາຍຈ່າຍປະຈຳວັນ ແລະ ລາຍການຂໍເງິນຄືນ</p>
+    <p class="err hidden" id="loginErr"></p>
+    <div class="field">
+      <label for="email">ຊື່ຜູ້ໃຊ້</label>
+      <input class="input" id="email" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" placeholder="nong" required>
+    </div>
+    <div class="field">
+      <label for="password">ລະຫັດຜ່ານ</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn primary block" type="submit" id="loginBtn">ເຂົ້າສູ່ລະບົບ</button>
+  </form>
+</section>
+
+<!-- ===== Not configured ===== -->
+<section id="setupView" class="login hidden">
+  <div class="card">
+    <h1>ຍັງບໍ່ໄດ້ຕັ້ງຄ່າ</h1>
+    <p>ກະລຸນາແກ້ໄຟລ໌ <b>config.js</b> ໃສ່ SUPABASE_URL ແລະ SUPABASE_ANON_KEY ກ່ອນ</p>
+  </div>
+</section>
+
+<!-- ===== App ===== -->
+<div id="appView" class="hidden">
+  <header class="top">
+    <div class="wrap">
+      <div class="top-row">
+        <div class="brand"><span class="brand-mark">¥</span><span id="viewTitle">ໜ້າຫຼັກ</span></div>
+        <button class="icon-btn" id="refreshBtn" aria-label="ໂຫຼດຂໍ້ມູນໃໝ່">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+        </button>
+        <button class="icon-btn" id="logoutBtn" aria-label="ອອກຈາກລະບົບ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </div>
+      <div class="month-bar" id="monthBar">
+        <button class="icon-btn" id="prevMonth" aria-label="ເດືອນກ່ອນ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="label" id="monthLabel"></span>
+        <button class="icon-btn" id="nextMonth" aria-label="ເດືອນຖັດໄປ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main"><div class="loading">ກຳລັງໂຫຼດ...</div></main>
+
+  <nav class="bottom" aria-label="ເມນູ">
+    <div class="wrap">
+      <button class="tab" data-view="home" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+        ໜ້າຫຼັກ
+      </button>
+      <button class="tab" data-view="list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        ລາຍການ
+      </button>
+      <button class="fab" id="addBtn" aria-label="ເພີ່ມລາຍຈ່າຍ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="tab" data-view="claims">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 1 .7V2l-1 .7-3-2-3 2-3-2-3 2-3-2z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        ຂໍເງິນຄືນ
+      </button>
+    </div>
+  </nav>
+</div>
+
+<div id="layer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+(() => {
+"use strict";
+
+/* ---------- constants ---------- */
+const CATS = [
+  { id: "food",      name: "ອາຫານ",          color: "#C2562E" },
+  { id: "transport", name: "ການເດີນທາງ",     color: "#2F6FA8" },
+  { id: "supplies",  name: "ຂອງໃຊ້",          color: "#8A6A1F" },
+  { id: "study",     name: "ການຮຽນ",          color: "#5B4BA6" },
+  { id: "housing",   name: "ທີ່ພັກ",           color: "#1E6B57" },
+  { id: "phone",     name: "ໂທລະສັບ/ເນັດ",    color: "#3E7D8C" },
+  { id: "health",    name: "ສຸຂະພາບ",         color: "#A63A6A" },
+  { id: "other",     name: "ອື່ນໆ",            color: "#6B635A" },
+];
+const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
+const MONTHS = ["ມັງກອນ","ກຸມພາ","ມີນາ","ເມສາ","ພຶດສະພາ","ມິຖຸນາ","ກໍລະກົດ","ສິງຫາ","ກັນຍາ","ຕຸລາ","ພະຈິກ","ທັນວາ"];
+const WEEKDAYS = ["ອາທິດ","ຈັນ","ອັງຄານ","ພຸດ","ພະຫັດ","ສຸກ","ເສົາ"];
+const BUCKET = "receipts";
+const LOGIN_DOMAIN = "nong-expense.app";
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const money = n => "¥" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const money2 = n => "¥" + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pad = n => String(n).padStart(2, "0");
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseYmd = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const todayStr = () => ymd(new Date());
+const daysBetween = (a, b) => Math.round((parseYmd(b) - parseYmd(a)) / 86400000);
+const monthKey = s => s.slice(0, 7);
+const monthName = key => { const [y, m] = key.split("-").map(Number); return `${MONTHS[m - 1]} ${y}`; };
+const dayLabel = s => {
+  const t = todayStr();
+  if (s === t) return "ມື້ນີ້";
+  if (daysBetween(s, t) === 1) return "ມື້ວານ";
+  const d = parseYmd(s);
+  return `ວັນ${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+};
+const shortDate = s => { const d = parseYmd(s); return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`; };
+const sum = arr => arr.reduce((a, e) => a + Number(e.amount), 0);
+
+function toast(msg) {
+  const el = document.createElement("div");
+  el.className = "toast"; el.setAttribute("role", "status"); el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}
+
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  toast("ສຳເນົາແລ້ວ — ວາງສົ່ງໃນ WhatsApp ຫຼື LINE ໄດ້ເລີຍ");
+}
+
+/* ---------- setup ---------- */
+const cfg = window.APP_CONFIG || {};
+if (!cfg.SUPABASE_URL || cfg.SUPABASE_URL.includes("YOUR-PROJECT") || !window.supabase) {
+  $("#setupView").classList.remove("hidden");
+  return;
+}
+const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true },
+});
+
+const state = {
+  session: null,
+  members: {},
+  expenses: [],
+  view: "home",
+  month: monthKey(todayStr()),
+  claimTab: "pending",
+  selected: new Set(),
+  loaded: false,
+};
+
+/* ---------- auth ---------- */
+$("#loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#loginBtn"), err = $("#loginErr");
+  err.classList.add("hidden");
+  btn.disabled = true; btn.textContent = "ກຳລັງເຂົ້າ...";
+  // ໃຊ້ຊື່ຜູ້ໃຊ້ແທນອີເມວ: "nong" -> "nong@nong-expense.app" (ບໍ່ຕ້ອງມີອີເມວແທ້)
+  const u = $("#email").value.trim().toLowerCase();
+  const { error } = await sb.auth.signInWithPassword({
+    email: u.includes("@") ? u : `${u}@${LOGIN_DOMAIN}`, password: $("#password").value,
+  });
+  btn.disabled = false; btn.textContent = "ເຂົ້າສູ່ລະບົບ";
+  if (error) {
+    err.textContent = "ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ";
+    err.classList.remove("hidden");
+  }
+});
+
+$("#logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+});
+
+sb.auth.onAuthStateChange((_evt, session) => {
+  const was = state.session?.user?.id;
+  state.session = session;
+  if (!session) { showLogin(); return; }
+  if (was !== session.user.id || !state.loaded) showApp();
+});
+
+function showLogin() {
+  state.loaded = false; state.expenses = [];
+  $("#appView").classList.add("hidden");
+  $("#loginView").classList.remove("hidden");
+}
+async function showApp() {
+  $("#loginView").classList.add("hidden");
+  $("#appView").classList.remove("hidden");
+  await loadAll();
+}
+
+/* ---------- data ---------- */
+async function loadAll() {
+  $("#main").innerHTML = `<div class="loading">ກຳລັງໂຫຼດ...</div>`;
+  try {
+    const { data: mem, error: mErr } = await sb.from("members").select("*");
+    if (mErr) throw mErr;
+    state.members = Object.fromEntries((mem || []).map(m => [m.email.toLowerCase(), m]));
+    const myEmail = (state.session.user.email || "").toLowerCase();
+    if (!state.members[myEmail]) {
+      $("#main").innerHTML = `<div class="empty">ບັນຊີນີ້ຍັງບໍ່ມີສິດໃຊ້ແອັບ<br>ກະລຸນາເພີ່ມຊື່ຜູ້ໃຊ້ໃນຕາຕະລາງ members</div>`;
+      return;
+    }
+    const rows = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await sb.from("expenses").select("*")
+        .order("spent_on", { ascending: false })
+        .order("created_at", { ascending: false })
+        .range(from, from + 999);
+      if (error) throw error;
+      rows.push(...data);
+      if (data.length < 1000) break;
+    }
+    state.expenses = rows;
+    state.loaded = true;
+    render();
+  } catch (e) {
+    console.error(e);
+    $("#main").innerHTML = `<div class="empty">ໂຫຼດຂໍ້ມູນບໍ່ໄດ້ — ກວດອິນເຕີເນັດ / VPN ແລ້ວລອງໃໝ່<br><br><button class="btn ghost" onclick="location.reload()">ລອງໃໝ່</button></div>`;
+  }
+}
+$("#refreshBtn").addEventListener("click", loadAll);
+
+/* ---------- navigation ---------- */
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  state.view = t.dataset.view; state.selected.clear(); render(); window.scrollTo(0, 0);
+}));
+$("#prevMonth").addEventListener("click", () => shiftMonth(-1));
+$("#nextMonth").addEventListener("click", () => shiftMonth(1));
+function shiftMonth(n) {
+  const [y, m] = state.month.split("-").map(Number);
+  const d = new Date(y, m - 1 + n, 1);
+  state.month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+  render();
+}
+$("#addBtn").addEventListener("click", () => openForm(null));
+
+/* ---------- render ---------- */
+function render() {
+  if (!state.loaded) return;
+  document.querySelectorAll(".tab").forEach(t =>
+    t.dataset.view === state.view ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
+  $("#viewTitle").textContent = { home: "ໜ້າຫຼັກ", list: "ລາຍການ", claims: "ຂໍເງິນຄືນ" }[state.view];
+  $("#monthBar").classList.toggle("hidden", state.view === "claims");
+  $("#monthLabel").textContent = monthName(state.month);
+  $("#nextMonth").disabled = state.month >= monthKey(todayStr());
+  $("#nextMonth").style.opacity = $("#nextMonth").disabled ? .3 : 1;
+  if (state.view === "home") renderHome();
+  else if (state.view === "list") renderList();
+  else renderClaims();
+}
+
+function monthStats(key) {
+  const rows = state.expenses.filter(e => monthKey(e.spent_on) === key);
+  const daily = rows.filter(e => !e.is_claim);
+  const claims = rows.filter(e => e.is_claim);
+  const [y, m] = key.split("-").map(Number);
+  const first = `${key}-01`;
+  const lastDay = new Date(y, m, 0).getDate();
+  const last = `${key}-${pad(lastDay)}`;
+  // ນັບມື້ຕັ້ງແຕ່ມື້ທຳອິດທີ່ມີການບັນທຶກ (ກໍລະນີນ້ອງເລີ່ມໃຊ້ກາງເດືອນ) ຮອດມື້ນີ້
+  const earliest = state.expenses.length ? state.expenses[state.expenses.length - 1].spent_on : first;
+  const start = earliest > first ? earliest : first;
+  const t = todayStr();
+  const end = t < last ? t : last;
+  const days = end >= start ? daysBetween(start, end) + 1 : 0;
+  const dailyTotal = sum(daily);
+  const avg = days ? dailyTotal / days : 0;
+  return { rows, daily, claims, days, dailyTotal, claimTotal: sum(claims), avg, lastDay, projected: avg * lastDay };
+}
+
+function renderHome() {
+  const s = monthStats(state.month);
+  const pendingAll = state.expenses.filter(e => e.is_claim && e.claim_status === "pending");
+  const byCat = CATS.map(c => ({ ...c, total: sum(s.daily.filter(e => e.category === c.id)) }))
+    .filter(c => c.total > 0).sort((a, b) => b.total - a.total);
+  const max = byCat[0]?.total || 1;
+  const recent = s.rows.slice(0, 5);
+
+  $("#main").innerHTML = `
+    <div class="stack">
+      <div class="card hero">
+        <div class="k">ສະເລ່ຍຕໍ່ມື້</div>
+        <div class="big num">${money(s.avg)}</div>
+        <div class="sub">ລາຍຈ່າຍປະຈຳວັນ ${money(s.dailyTotal)} ÷ ${s.days} ມື້ · ບໍ່ລວມລາຍການຂໍຄືນ</div>
+      </div>
+      <div class="grid2">
+        <div class="card stat"><div class="k">ຄາດວ່າທັງເດືອນ</div><div class="v num">${money(Math.round(s.projected))}</div></div>
+        <div class="card stat"><div class="k">ລາຍການຂໍຄືນເດືອນນີ້</div><div class="v num">${money(s.claimTotal)}</div></div>
+      </div>
+      <button class="card stat pending" style="text-align:left;width:100%" id="goPending">
+        <div class="k">ລໍຖ້າຄອບຄົວຄືນເງິນ (ທຸກເດືອນ) · ${pendingAll.length} ລາຍການ</div>
+        <div class="v num">${money2(sum(pendingAll))}</div>
+      </button>
+    </div>
+
+    <div class="section-title">ແຍກຕາມໝວດ <small>ລາຍຈ່າຍປະຈຳວັນ</small></div>
+    <div class="card">
+      ${byCat.length ? byCat.map(c => `
+        <div class="cat-row">
+          <span>${esc(c.name)}</span>
+          <span class="bar"><i style="width:${(c.total / max * 100).toFixed(1)}%;background:${c.color}"></i></span>
+          <span class="num">${money(c.total)}</span>
+        </div>`).join("") : `<div class="empty" style="padding:16px">ຍັງບໍ່ມີລາຍຈ່າຍໃນເດືອນນີ້</div>`}
+    </div>
+
+    <div class="section-title">ລ່າສຸດ <small><button class="link-btn" id="seeAll">ເບິ່ງທັງໝົດ</button></small></div>
+    ${recent.length ? `<div class="items">${recent.map(itemHtml).join("")}</div>` : `<div class="empty">ກົດ + ເພື່ອບັນທຶກລາຍຈ່າຍທຳອິດ</div>`}
+
+    <div style="margin-top:20px">
+      <button class="btn ghost block" id="copyMonth">ສຳເນົາສະຫຼຸບເດືອນນີ້ ສົ່ງໃຫ້ພໍ່ແມ່</button>
+    </div>
+  `;
+  $("#goPending").onclick = () => { state.view = "claims"; state.claimTab = "pending"; render(); };
+  $("#seeAll").onclick = () => { state.view = "list"; render(); };
+  $("#copyMonth").onclick = () => copyText(monthSummaryText(s, byCat, pendingAll));
+  bindItems();
+}
+
+function monthSummaryText(s, byCat, pendingAll) {
+  const lines = [
+    `ສະຫຼຸບລາຍຈ່າຍ ${monthName(state.month)}`,
+    `ສະເລ່ຍຕໍ່ມື້: ${money(s.avg)} (${s.days} ມື້)`,
+    `ລາຍຈ່າຍປະຈຳວັນລວມ: ${money(s.dailyTotal)}`,
+    `ຄາດວ່າທັງເດືອນ: ~${money(Math.round(s.projected))}`,
+    "",
+    "ແຍກຕາມໝວດ:",
+    ...byCat.map(c => `• ${c.name}: ${money(c.total)}`),
+  ];
+  if (pendingAll.length) {
+    lines.push("", `ລໍຖ້າຄືນເງິນ: ${money2(sum(pendingAll))} (${pendingAll.length} ລາຍການ)`);
+  }
+  return lines.join("\n");
+}
+
+function itemHtml(e) {
+  const c = CAT[e.category] || CAT.other;
+  const who = state.members[(e.created_email || "").toLowerCase()];
+  const tag = e.is_claim
+    ? (e.claim_status === "reimbursed" ? `<span class="tag done">ຄືນແລ້ວ</span>` : `<span class="tag pending">ລໍຖ້າຄືນ</span>`)
+    : "";
+  return `
+    <button class="item" data-id="${e.id}">
+      <span class="dot" style="background:${c.color}" aria-hidden="true">${esc(c.name.slice(0, 1))}</span>
+      <span class="mid">
+        <div class="t">${esc(e.note || c.name)}</div>
+        <div class="m">${esc(c.name)}${tag}${e.receipt_path ? " · ມີໃບບິນ" : ""}${who && who.role !== "student" ? ` · ໂດຍ${esc(who.display_name)}` : ""}</div>
+      </span>
+      <span class="amt num">${money(e.amount)}</span>
+    </button>`;
+}
+function bindItems(root = $("#main")) {
+  root.querySelectorAll(".item[data-id]").forEach(b =>
+    b.addEventListener("click", () => openForm(state.expenses.find(e => e.id === b.dataset.id))));
+}
+
+function renderList() {
+  const rows = state.expenses.filter(e => monthKey(e.spent_on) === state.month);
+  if (!rows.length) { $("#main").innerHTML = `<div class="empty">ຍັງບໍ່ມີລາຍການໃນເດືອນນີ້</div>`; return; }
+  const groups = {};
+  rows.forEach(e => (groups[e.spent_on] ||= []).push(e));
+  $("#main").innerHTML = Object.keys(groups).sort().reverse().map(d => `
+    <div class="day-head"><span>${dayLabel(d)}</span><span class="num">${money(sum(groups[d]))}</span></div>
+    <div class="items">${groups[d].map(itemHtml).join("")}</div>
+  `).join("") + `<p class="footnote">ລວມທັງເດືອນ ${money(sum(rows))} · ${rows.length} ລາຍການ</p>`;
+  bindItems();
+}
+
+function renderClaims() {
+  const pending = state.expenses.filter(e => e.is_claim && e.claim_status === "pending");
+  const done = state.expenses.filter(e => e.is_claim && e.claim_status === "reimbursed")
+    .sort((a, b) => (b.reimbursed_at || "").localeCompare(a.reimbursed_at || ""));
+  const tab = state.claimTab;
+  const list = tab === "pending" ? pending : done;
+  const selTotal = sum(pending.filter(e => state.selected.has(e.id)));
+
+  $("#main").innerHTML = `
+    <div class="card stat pending" style="margin-bottom:12px">
+      <div class="k">ຍອດທີ່ຄອບຄົວຕ້ອງຄືນໃຫ້ນ້ອງ</div>
+      <div class="v num" style="font-size:32px">${money2(sum(pending))}</div>
+    </div>
+    <div class="seg" role="group" aria-label="ສະຖານະ">
+      <button data-ct="pending" aria-pressed="${tab === "pending"}">ລໍຖ້າຄືນ (${pending.length})</button>
+      <button data-ct="done" aria-pressed="${tab === "done"}">ຄືນແລ້ວ (${done.length})</button>
+    </div>
+    ${list.length ? `
+      ${tab === "pending" ? `<div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px 6px">
+        <button class="link-btn" id="selAll">${state.selected.size === pending.length ? "ຍົກເລີກທັງໝົດ" : "ເລືອກທັງໝົດ"}</button>
+        <button class="link-btn" id="copyClaims">ສຳເນົາລາຍການສົ່ງຄອບຄົວ</button>
+      </div>` : ""}
+      <div class="items">
+        ${list.map(e => {
+          const c = CAT[e.category] || CAT.other;
+          return `<div class="claim-item">
+            ${tab === "pending" ? `<input type="checkbox" data-sel="${e.id}" ${state.selected.has(e.id) ? "checked" : ""} aria-label="ເລືອກ ${esc(e.note || c.name)}">` : ""}
+            <div class="mid">
+              <div class="t" style="font-size:15px">${esc(e.note || c.name)}</div>
+              <div class="m" style="font-size:12px;color:var(--muted)">${shortDate(e.spent_on)} · ${esc(c.name)}
+                ${tab === "done" && e.reimbursed_at ? ` · ຄືນເມື່ອ ${shortDate(e.reimbursed_at.slice(0, 10))}` : ""}</div>
+              <div style="display:flex;gap:14px">
+                ${e.receipt_path ? `<button class="link-btn" data-receipt="${esc(e.receipt_path)}">ເບິ່ງໃບບິນ</button>` : `<span style="font-size:12px;color:var(--muted);padding:6px 0">ບໍ່ມີໃບບິນ</span>`}
+                <button class="link-btn" data-edit="${e.id}">ແກ້ໄຂ</button>
+              </div>
+            </div>
+            <span class="amt num" style="font-weight:600">${money2(e.amount)}</span>
+          </div>`;
+        }).join("")}
+      </div>
+      ${tab === "pending" ? `<div style="margin-top:14px">
+        <button class="btn jade block" id="markDone" ${state.selected.size ? "" : "disabled style=\"opacity:.45\""}>
+          ໝາຍວ່າຄືນແລ້ວ ${state.selected.size ? `(${state.selected.size} ລາຍການ · ${money2(selTotal)})` : ""}
+        </button>
+        <p class="footnote">ເລືອກລາຍການທີ່ຄອບຄົວໂອນຄືນແລ້ວ ແລ້ວກົດປຸ່ມນີ້</p>
+      </div>` : ""}
+    ` : `<div class="empty">${tab === "pending" ? "ບໍ່ມີລາຍການຄ້າງຄືນ" : "ຍັງບໍ່ມີລາຍການທີ່ຄືນແລ້ວ"}</div>`}
+  `;
+  $("#main").querySelectorAll("[data-ct]").forEach(b => b.onclick = () => { state.claimTab = b.dataset.ct; state.selected.clear(); render(); });
+  $("#main").querySelectorAll("[data-sel]").forEach(cb => cb.onchange = () => {
+    cb.checked ? state.selected.add(cb.dataset.sel) : state.selected.delete(cb.dataset.sel); render();
+  });
+  $("#main").querySelectorAll("[data-receipt]").forEach(b => b.onclick = () => viewReceipt(b.dataset.receipt));
+  $("#main").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => openForm(state.expenses.find(e => e.id === b.dataset.edit)));
+  const selAll = $("#selAll");
+  if (selAll) selAll.onclick = () => {
+    if (state.selected.size === pending.length) state.selected.clear();
+    else pending.forEach(e => state.selected.add(e.id));
+    render();
+  };
+  const cp = $("#copyClaims");
+  if (cp) cp.onclick = () => {
+    const pick = state.selected.size ? pending.filter(e => state.selected.has(e.id)) : pending;
+    copyText([
+      `ຂໍເງິນຄືນ ${pick.length} ລາຍການ`,
+      ...pick.slice().sort((a, b) => a.spent_on.localeCompare(b.spent_on))
+        .map(e => `• ${shortDate(e.spent_on)} ${(CAT[e.category] || CAT.other).name}${e.note ? " - " + e.note : ""}: ${money2(e.amount)}`),
+      `ລວມ: ${money2(sum(pick))}`,
+    ].join("\n"));
+  };
+  const md = $("#markDone");
+  if (md) md.onclick = markReimbursed;
+}
+
+async function markReimbursed() {
+  const ids = [...state.selected];
+  if (!ids.length) return;
+  const now = new Date().toISOString();
+  const { error } = await sb.from("expenses")
+    .update({ claim_status: "reimbursed", reimbursed_at: now }).in("id", ids);
+  if (error) { toast("ບັນທຶກບໍ່ສຳເລັດ: " + error.message); return; }
+  state.expenses.forEach(e => { if (ids.includes(e.id)) { e.claim_status = "reimbursed"; e.reimbursed_at = now; } });
+  state.selected.clear();
+  toast(`ໝາຍ ${ids.length} ລາຍການວ່າຄືນແລ້ວ`);
+  render();
+}
+
+/* ---------- receipt ---------- */
+async function viewReceipt(path) {
+  const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(path, 3600);
+  if (error) { toast("ເປີດຮູບບໍ່ໄດ້"); return; }
+  const v = document.createElement("div");
+  v.className = "viewer";
+  v.innerHTML = `<button class="icon-btn" aria-label="ປິດ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button><img alt="ໃບບິນ" src="${esc(data.signedUrl)}">`;
+  v.querySelector("button").onclick = () => v.remove();
+  document.body.appendChild(v);
+}
+
+function compressImage(file, maxSide = 1600, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b ? resolve(b) : reject(new Error("compress failed")), "image/jpeg", quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("ບໍ່ແມ່ນໄຟລ໌ຮູບ")); };
+    img.src = url;
+  });
+}
+
+/* ---------- add / edit form ---------- */
+function openForm(exp) {
+  const isEdit = !!exp;
+  const f = {
+    spent_on: exp?.spent_on || todayStr(),
+    amount: exp ? String(Number(exp.amount)) : "",
+    category: exp?.category || "food",
+    note: exp?.note || "",
+    is_claim: exp?.is_claim || false,
+    claim_status: exp?.claim_status || "pending",
+    receipt_path: exp?.receipt_path || null,
+  };
+  let newFile = null, removeReceipt = false;
+
+  const layer = $("#layer");
+  layer.innerHTML = `
+    <div class="overlay" id="ov">
+      <form class="sheet" id="expForm" novalidate role="dialog" aria-modal="true" aria-labelledby="formTitle">
+        <div class="grab"></div>
+        <h2><span id="formTitle">${isEdit ? "ແກ້ໄຂລາຍຈ່າຍ" : "ເພີ່ມລາຍຈ່າຍ"}</span>
+          <button type="button" class="icon-btn" id="closeForm" aria-label="ປິດ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </h2>
+        <div class="field">
+          <label for="fAmount">ຈຳນວນເງິນ (ຢວນ)</label>
+          <div class="amount-wrap"><span>¥</span>
+            <input class="input num" id="fAmount" inputmode="decimal" autocomplete="off" placeholder="0" value="${esc(f.amount)}" required>
+          </div>
+        </div>
+        <div class="field">
+          <span class="lbl" id="catLbl">ໝວດ</span>
+          <div class="chips" role="group" aria-labelledby="catLbl">
+            ${CATS.map(c => `<button type="button" class="chip" data-cat="${c.id}" aria-pressed="${c.id === f.category}"><i style="background:${c.color}"></i>${esc(c.name)}</button>`).join("")}
+          </div>
+        </div>
+        <div class="field">
+          <label for="fNote">ລາຍລະອຽດ</label>
+          <input class="input" id="fNote" maxlength="200" placeholder="ເຊັ່ນ: ເຂົ້າທ່ຽງ, ຄ່າລົດໄຟໃຕ້ດິນ" value="${esc(f.note)}">
+        </div>
+        <div class="field">
+          <label for="fDate">ວັນທີ</label>
+          <input class="input" id="fDate" type="date" value="${esc(f.spent_on)}" max="${todayStr()}" required>
+        </div>
+
+        <div class="switch-row">
+          <label class="txt" for="fClaim">ຕ້ອງຂໍເງິນຄືນຈາກຄອບຄົວ<small>ເຊັ່ນ ຄ່າຮຽນ, ຄ່າປຶ້ມ, ລາຍຈ່າຍພິເສດ</small></label>
+          <span class="switch"><input type="checkbox" id="fClaim" ${f.is_claim ? "checked" : ""}><span></span></span>
+        </div>
+
+        <div id="claimBox" class="${f.is_claim ? "" : "hidden"}">
+          <div class="field">
+            <span class="lbl">ຮູບໃບບິນ / ສະລິບ</span>
+            <div class="receipt-box">
+              <img id="rPrev" alt="" class="${f.receipt_path ? "" : "hidden"}">
+              <div style="flex:1;font-size:13px;color:var(--muted)" id="rText">${f.receipt_path ? "ມີໃບບິນແລ້ວ" : "ຍັງບໍ່ມີຮູບ"}</div>
+              <label class="btn ghost" for="fFile">${f.receipt_path ? "ປ່ຽນຮູບ" : "ຖ່າຍ / ເລືອກຮູບ"}</label>
+              <input type="file" id="fFile" accept="image/*" class="hidden">
+            </div>
+            ${f.receipt_path ? `<div style="display:flex;gap:14px"><button type="button" class="link-btn" id="rView">ເບິ່ງຮູບເຕັມ</button><button type="button" class="link-btn" id="rRemove">ລຶບຮູບ</button></div>` : ""}
+          </div>
+          ${isEdit ? `
+          <div class="field">
+            <label for="fStatus">ສະຖານະ</label>
+            <select class="input" id="fStatus">
+              <option value="pending" ${f.claim_status === "pending" ? "selected" : ""}>ລໍຖ້າຄືນ</option>
+              <option value="reimbursed" ${f.claim_status === "reimbursed" ? "selected" : ""}>ຄືນແລ້ວ</option>
+            </select>
+          </div>` : ""}
+        </div>
+
+        <p class="err hidden" id="fErr"></p>
+        <div class="row-btns">
+          ${isEdit ? `<button type="button" class="btn danger" id="fDelete">ລຶບ</button>` : ""}
+          <button type="submit" class="btn primary" id="fSave" style="flex:2">ບັນທຶກ</button>
+        </div>
+      </form>
+    </div>`;
+
+  const close = () => { layer.innerHTML = ""; };
+  $("#closeForm").onclick = close;
+  $("#ov").addEventListener("click", e => { if (e.target.id === "ov") close(); });
+  layer.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => {
+    f.category = b.dataset.cat;
+    layer.querySelectorAll("[data-cat]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  });
+  $("#fClaim").onchange = e => $("#claimBox").classList.toggle("hidden", !e.target.checked);
+
+  if (f.receipt_path) {
+    sb.storage.from(BUCKET).createSignedUrl(f.receipt_path, 3600).then(({ data }) => {
+      if (data) $("#rPrev").src = data.signedUrl;
+    });
+    $("#rView").onclick = () => viewReceipt(f.receipt_path);
+    $("#rRemove").onclick = () => {
+      removeReceipt = true; newFile = null;
+      $("#rPrev").classList.add("hidden"); $("#rText").textContent = "ຈະລຶບຮູບເມື່ອກົດບັນທຶກ";
+    };
+  }
+  $("#fFile").onchange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    $("#rText").textContent = "ກຳລັງຫຍໍ້ຮູບ...";
+    try {
+      newFile = await compressImage(file);
+      removeReceipt = false;
+      $("#rPrev").src = URL.createObjectURL(newFile);
+      $("#rPrev").classList.remove("hidden");
+      $("#rText").textContent = `ພ້ອມອັບໂຫຼດ (${Math.round(newFile.size / 1024)} KB)`;
+    } catch (err) {
+      $("#rText").textContent = "ໃຊ້ຮູບນີ້ບໍ່ໄດ້";
+    }
+  };
+
+  if (isEdit) $("#fDelete").onclick = async () => {
+    if (!confirm("ລຶບລາຍການນີ້ແທ້ບໍ?")) return;
+    const { error } = await sb.from("expenses").delete().eq("id", exp.id);
+    if (error) { toast("ລຶບບໍ່ສຳເລັດ"); return; }
+    if (exp.receipt_path) await sb.storage.from(BUCKET).remove([exp.receipt_path]);
+    state.expenses = state.expenses.filter(e => e.id !== exp.id);
+    close(); toast("ລຶບແລ້ວ"); render();
+  };
+
+  if (!isEdit) setTimeout(() => $("#fAmount").focus(), 50);
+
+  $("#expForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const err = $("#fErr"); err.classList.add("hidden");
+    const amount = parseFloat($("#fAmount").value.replace(/,/g, ""));
+    if (!(amount > 0)) { err.textContent = "ກະລຸນາໃສ່ຈຳນວນເງິນ"; err.classList.remove("hidden"); $("#fAmount").focus(); return; }
+    const date = $("#fDate").value;
+    if (!date) { err.textContent = "ກະລຸນາເລືອກວັນທີ"; err.classList.remove("hidden"); return; }
+    const isClaim = $("#fClaim").checked;
+    const status = isClaim ? ($("#fStatus")?.value || f.claim_status || "pending") : null;
+
+    const save = $("#fSave"); save.disabled = true; save.textContent = "ກຳລັງບັນທຶກ...";
+    try {
+      let receipt_path = f.receipt_path;
+      const oldPath = f.receipt_path;
+      if (!isClaim || removeReceipt) receipt_path = null;
+      if (isClaim && newFile) {
+        const path = `${date.slice(0, 7)}/${crypto.randomUUID()}.jpg`;
+        const { error: upErr } = await sb.storage.from(BUCKET).upload(path, newFile, { contentType: "image/jpeg" });
+        if (upErr) throw upErr;
+        receipt_path = path;
+      }
+      const payload = {
+        spent_on: date,
+        amount: Math.round(amount * 100) / 100,
+        category: f.category,
+        note: $("#fNote").value.trim() || null,
+        is_claim: isClaim,
+        claim_status: status,
+        reimbursed_at: status === "reimbursed" ? (exp?.reimbursed_at || new Date().toISOString()) : null,
+        receipt_path,
+      };
+      let row;
+      if (isEdit) {
+        const { data, error } = await sb.from("expenses").update(payload).eq("id", exp.id).select().single();
+        if (error) throw error; row = data;
+        state.expenses = state.expenses.map(x => x.id === row.id ? row : x);
+      } else {
+        const { data, error } = await sb.from("expenses").insert(payload).select().single();
+        if (error) throw error; row = data;
+        state.expenses.unshift(row);
+      }
+      if (oldPath && oldPath !== receipt_path) await sb.storage.from(BUCKET).remove([oldPath]);
+      state.expenses.sort((a, b) => b.spent_on.localeCompare(a.spent_on) || b.created_at.localeCompare(a.created_at));
+      close();
+      toast(isEdit ? "ແກ້ໄຂແລ້ວ" : "ບັນທຶກແລ້ວ");
+      render();
+    } catch (ex) {
+      console.error(ex);
+      err.textContent = "ບັນທຶກບໍ່ສຳເລັດ — ກວດອິນເຕີເນັດ / VPN ແລ້ວລອງໃໝ່";
+      err.classList.remove("hidden");
+      save.disabled = false; save.textContent = "ບັນທຶກ";
+    }
+  });
+}
+
+})();
+</script>
+</body>
+</html>
