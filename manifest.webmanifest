@@ -1,5 +1,9 @@
 {
+  "id": "./",
   "name": "ລາຍຈ່າຍນ້ອງ",
+  "description": "ບັນທຶກລາຍຈ່າຍປະຈຳວັນ ແລະ ລາຍການຂໍເງິນຄືນ",
+  "lang": "lo",
+  "orientation": "portrait",
   "short_name": "ລາຍຈ່າຍນ້ອງ",
   "start_url": "./",
   "scope": "./",
@@ -7,8 +11,8 @@
   "background_color": "#F5F1EA",
   "theme_color": "#A8321C",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
   ]
 }

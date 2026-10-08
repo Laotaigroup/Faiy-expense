@@ -163,6 +163,14 @@ nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items
 
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:12px;font-size:14px;z-index:40;max-width:90vw;box-shadow:var(--shadow)}
 .loading{text-align:center;padding:48px;color:var(--muted)}
+.steps{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{position:relative;padding-left:40px;min-height:28px;font-size:15px;line-height:1.6;counter-increment:s}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.steps svg{width:18px;height:18px;vertical-align:-3px}
+.note{background:var(--amber-soft);color:var(--amber);border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:14px}
+.install-banner{display:flex;align-items:center;gap:12px;margin-top:12px}
+.install-banner .txt{flex:1;font-size:14px}
+.install-banner .txt small{display:block;color:var(--muted);font-size:12px}
 .footnote{font-size:12px;color:var(--muted);margin:8px 4px}
 </style>
 </head>
@@ -184,6 +192,10 @@ nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items
       <input class="input" id="password" type="password" autocomplete="current-password" required>
     </div>
     <button class="btn primary block" type="submit" id="loginBtn">ເຂົ້າສູ່ລະບົບ</button>
+    <button class="btn ghost block install-trigger hidden" type="button" style="margin-top:10px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 7v7M9 11l3 3 3-3"/></svg>
+      ຕິດຕັ້ງແອັບໃສ່ໜ້າຈໍ
+    </button>
   </form>
 </section>
 
@@ -201,6 +213,9 @@ nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items
     <div class="wrap">
       <div class="top-row">
         <div class="brand"><span class="brand-mark">¥</span><span id="viewTitle">ໜ້າຫຼັກ</span></div>
+        <button class="icon-btn install-trigger hidden" aria-label="ຕິດຕັ້ງແອັບໃສ່ໜ້າຈໍ" title="ຕິດຕັ້ງແອັບ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 7v7M9 11l3 3 3-3"/></svg>
+        </button>
         <button class="icon-btn" id="refreshBtn" aria-label="ໂຫຼດຂໍ້ມູນໃໝ່">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
         </button>
@@ -306,6 +321,109 @@ async function copyText(text) {
   }
   toast("ສຳເນົາແລ້ວ — ວາງສົ່ງໃນ WhatsApp ຫຼື LINE ໄດ້ເລີຍ");
 }
+
+/* ---------- install to home screen ---------- */
+const ua = navigator.userAgent;
+const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isInApp = /MicroMessenger|Line\/|FBAN|FBAV|Instagram|WhatsApp|Messenger/i.test(ua);
+const isIOSSafari = isIOS && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua) && !isInApp;
+const isStandalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+let installPrompt = null;
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  installPrompt = e;
+  updateInstallUI();
+});
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+  toast("ຕິດຕັ້ງແລ້ວ — ເປີດແອັບຈາກໜ້າຈໍມືຖືໄດ້ເລີຍ");
+  updateInstallUI();
+});
+
+function updateInstallUI() {
+  const show = !isStandalone();
+  document.querySelectorAll(".install-trigger").forEach(b => b.classList.toggle("hidden", !show));
+  const banner = document.getElementById("installBanner");
+  if (banner) banner.classList.toggle("hidden", !show);
+}
+document.addEventListener("click", e => {
+  if (e.target.closest(".install-trigger")) installApp();
+});
+
+async function installApp() {
+  if (installPrompt) {
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    installPrompt = null;
+    if (outcome === "accepted") return;
+    updateInstallUI();
+    return;
+  }
+  showInstallHelp();
+}
+
+function showInstallHelp() {
+  const shareIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="ປຸ່ມແບ່ງປັນ"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
+  let body;
+  if (isInApp) {
+    body = `
+      <div class="note">ແອັບແຊັດ (WeChat, LINE, Messenger…) ຕິດຕັ້ງບໍ່ໄດ້ — ຕ້ອງເປີດໃນ ${isIOS ? "Safari" : "Chrome"} ກ່ອນ</div>
+      <ol class="steps">
+        <li>ກົດປຸ່ມ "ສຳເນົາລິ້ງ" ລຸ່ມນີ້</li>
+        <li>ເປີດແອັບ ${isIOS ? "Safari" : "Chrome"} ແລ້ວວາງລິ້ງໃນຊ່ອງທີ່ຢູ່</li>
+        <li>ກົດປຸ່ມ "ຕິດຕັ້ງແອັບໃສ່ໜ້າຈໍ" ອີກຄັ້ງ</li>
+      </ol>
+      <button class="btn primary block" id="copyLink" type="button">ສຳເນົາລິ້ງ</button>`;
+  } else if (isIOS) {
+    body = `
+      ${isIOSSafari ? "" : `<div class="note">iPhone ຕ້ອງໃຊ້ Safari ເທົ່ານັ້ນ — ສຳເນົາລິ້ງແລ້ວເປີດໃນ Safari ກ່ອນ</div>`}
+      <ol class="steps">
+        <li>ກົດປຸ່ມແບ່ງປັນ ${shareIcon} ຢູ່ແຖບລຸ່ມຂອງ Safari</li>
+        <li>ເລື່ອນລົງ ແລ້ວກົດ <b>"Add to Home Screen"</b> (ເພີ່ມໃສ່ໜ້າຈໍໂຮມ)</li>
+        <li>ກົດ <b>"Add"</b> ມຸມຂວາເທິງ — ຈະມີໄອຄອນ ¥ ສີແດງຢູ່ໜ້າຈໍ</li>
+      </ol>
+      ${isIOSSafari ? `<button class="btn primary block" id="closeHelp2" type="button">ເຂົ້າໃຈແລ້ວ</button>` : `<button class="btn primary block" id="copyLink" type="button">ສຳເນົາລິ້ງ</button>`}`;
+  } else {
+    body = `
+      <ol class="steps">
+        <li>ເປີດລິ້ງນີ້ໃນ <b>Chrome</b></li>
+        <li>ກົດເມນູ <b>⋮</b> ມຸມຂວາເທິງ</li>
+        <li>ກົດ <b>"Install app"</b> ຫຼື <b>"Add to Home screen"</b> (ຕິດຕັ້ງແອັບ / ເພີ່ມໃສ່ໜ້າຈໍຫຼັກ)</li>
+      </ol>
+      <div class="note">ມືຖື Huawei / Xiaomi ທີ່ບໍ່ມີ Chrome: ໃນ browser ຂອງເຄື່ອງ ກົດເມນູ ແລ້ວຊອກ "ເພີ່ມທາງລັດ" ຫຼື "Add to home screen"</div>
+      <button class="btn primary block" id="copyLink" type="button">ສຳເນົາລິ້ງ</button>`;
+  }
+  const layer = $("#layer");
+  layer.innerHTML = `
+    <div class="overlay" id="helpOv">
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <div class="grab"></div>
+        <h2><span id="helpTitle">ຕິດຕັ້ງແອັບໃສ່ໜ້າຈໍມືຖື</span>
+          <button type="button" class="icon-btn" id="closeHelp" aria-label="ປິດ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </h2>
+        ${body}
+      </div>
+    </div>`;
+  const close = () => { layer.innerHTML = ""; };
+  $("#closeHelp").onclick = close;
+  $("#helpOv").addEventListener("click", e => { if (e.target.id === "helpOv") close(); });
+  const c2 = $("#closeHelp2"); if (c2) c2.onclick = close;
+  const cl = $("#copyLink");
+  if (cl) cl.onclick = async () => {
+    const link = location.href.split("#")[0];
+    try { await navigator.clipboard.writeText(link); } catch {
+      const ta = document.createElement("textarea"); ta.value = link; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    toast("ສຳເນົາລິ້ງແລ້ວ");
+  };
+}
+updateInstallUI();
 
 /* ---------- setup ---------- */
 const cfg = window.APP_CONFIG || {};
@@ -465,6 +583,11 @@ function renderHome() {
   const recent = s.rows.slice(0, 5);
 
   $("#main").innerHTML = `
+    <div class="card install-banner" id="installBanner" style="margin-bottom:12px">
+      <span class="brand-mark" style="width:40px;height:40px;border-radius:12px;font-size:20px;flex:none">¥</span>
+      <span class="txt"><b>ຕິດຕັ້ງແອັບໃສ່ໜ້າຈໍ</b><small>ເປີດໄວ ບໍ່ຕ້ອງພິມລິ້ງທຸກຄັ້ງ</small></span>
+      <button class="btn primary install-trigger" type="button" style="min-height:44px;padding:8px 16px">ຕິດຕັ້ງ</button>
+    </div>
     <div class="stack">
       <div class="card hero">
         <div class="k">ສະເລ່ຍຕໍ່ມື້</div>
@@ -498,7 +621,8 @@ function renderHome() {
       <button class="btn ghost block" id="copyMonth">ສຳເນົາສະຫຼຸບເດືອນນີ້ ສົ່ງໃຫ້ພໍ່ແມ່</button>
     </div>
   `;
-  $("#goPending").onclick = () => { state.view = "claims"; state.claimTab = "pending"; render(); };
+  updateInstallUI();
+  $("#goPending").onclick =() => { state.view = "claims"; state.claimTab = "pending"; render(); };
   $("#seeAll").onclick = () => { state.view = "list"; render(); };
   $("#copyMonth").onclick = () => copyText(monthSummaryText(s, byCat, pendingAll));
   bindItems();
