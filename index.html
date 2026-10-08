@@ -572,13 +572,8 @@ function monthStats(key) {
   const [y, m] = key.split("-").map(Number);
   const first = `${key}-01`;
   const lastDay = new Date(y, m, 0).getDate();
-  const last = `${key}-${pad(lastDay)}`;
-  // ນັບມື້ຕັ້ງແຕ່ມື້ທຳອິດທີ່ມີການບັນທຶກ (ກໍລະນີນ້ອງເລີ່ມໃຊ້ກາງເດືອນ) ຮອດມື້ນີ້
-  const earliest = state.expenses.length ? state.expenses[state.expenses.length - 1].spent_on : first;
-  const start = earliest > first ? earliest : first;
-  const t = todayStr();
-  const end = t < last ? t : last;
-  const days = end >= start ? daysBetween(start, end) + 1 : 0;
+  // ຫານດ້ວຍຈຳນວນມື້ທີ່ມີລາຍຈ່າຍປະຈຳວັນແທ້ (ບໍ່ນັບມື້ທີ່ບໍ່ມີລາຍການ)
+  const days = new Set(daily.map(e => e.spent_on)).size;
   const dailyTotal = sum(daily);
   const avg = days ? dailyTotal / days : 0;
   return { rows, daily, claims, days, dailyTotal, claimTotal: sum(claims), avg, lastDay, projected: avg * lastDay };
@@ -602,7 +597,7 @@ function renderHome() {
       <div class="card hero">
         <div class="k">ສະເລ່ຍຕໍ່ມື້</div>
         <div class="big num">${money(s.avg)}</div>
-        <div class="sub">ລາຍຈ່າຍປະຈຳວັນ ${money(s.dailyTotal)} ÷ ${s.days} ມື້ · ບໍ່ລວມລາຍການຂໍຄືນ</div>
+        <div class="sub">ລາຍຈ່າຍປະຈຳວັນ ${money(s.dailyTotal)} ÷ ${s.days} ມື້ທີ່ມີລາຍຈ່າຍ · ບໍ່ລວມລາຍການຂໍຄືນ</div>
       </div>
       <div class="grid2">
         <div class="card stat"><div class="k">ຄາດວ່າທັງເດືອນ</div><div class="v num">${money(Math.round(s.projected))}</div></div>
@@ -641,7 +636,7 @@ function renderHome() {
 function monthSummaryText(s, byCat, pendingAll) {
   const lines = [
     `ສະຫຼຸບລາຍຈ່າຍ ${monthName(state.month)}`,
-    `ສະເລ່ຍຕໍ່ມື້: ${money(s.avg)} (${s.days} ມື້)`,
+    `ສະເລ່ຍຕໍ່ມື້: ${money(s.avg)} (${s.days} ມື້ທີ່ມີລາຍຈ່າຍ)`,
     `ລາຍຈ່າຍປະຈຳວັນລວມ: ${money(s.dailyTotal)}`,
     `ຄາດວ່າທັງເດືອນ: ~${money(Math.round(s.projected))}`,
     "",
