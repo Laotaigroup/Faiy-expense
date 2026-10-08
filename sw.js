@@ -1,6 +1,6 @@
 // Service worker: ເຮັດໃຫ້ຕິດຕັ້ງແອັບໄດ້ ແລະ ເປີດໜ້າແອັບໄດ້ໄວຂຶ້ນ
 // ຂໍ້ມູນ Supabase ບໍ່ຖືກເກັບໃນ cache — ດຶງຈາກເນັດທຸກຄັ້ງ
-const CACHE = "faiy-expense-v2";
+const CACHE = "faiy-expense-v3";
 const SHELL = ["./", "./index.html", "./config.js", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 
 self.addEventListener("install", e => {

@@ -135,15 +135,17 @@ nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items
 .chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px;font-size:14px;min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-bottom:14px}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;min-height:72px;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-bottom:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.switch-row:active{background:var(--line)}
+.switch-row:has(input:checked){border-color:var(--red);background:var(--red-soft)}
 .switch-row .txt{font-size:15px;font-weight:600}
 .switch-row .txt small{display:block;font-weight:400;color:var(--muted);font-size:12px}
-.switch{position:relative;width:52px;height:32px;flex:none}
+.switch{position:relative;width:60px;height:36px;flex:none}
 .switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
 .switch span{position:absolute;inset:0;pointer-events:none;background:var(--line);border-radius:999px;transition:background .12s}
-.switch span::after{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch span::after{content:"";position:absolute;width:30px;height:30px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .switch input:checked+span{background:var(--red)}
-.switch input:checked+span::after{transform:translateX(20px)}
+.switch input:checked+span::after{transform:translateX(24px)}
 .switch input:focus-visible+span{outline:2px solid var(--red);outline-offset:2px}
 .receipt-box{border:1.5px dashed var(--line);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center}
 .receipt-box img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--line)}
@@ -849,10 +851,10 @@ function openForm(exp) {
           <input class="input" id="fDate" type="date" value="${esc(f.spent_on)}" max="${todayStr()}" required>
         </div>
 
-        <div class="switch-row">
-          <label class="txt" for="fClaim">ຕ້ອງຂໍເງິນຄືນຈາກຄອບຄົວ<small>ເຊັ່ນ ຄ່າຮຽນ, ຄ່າປຶ້ມ, ລາຍຈ່າຍພິເສດ</small></label>
-          <span class="switch"><input type="checkbox" id="fClaim" ${f.is_claim ? "checked" : ""}><span></span></span>
-        </div>
+        <label class="switch-row" id="claimRow">
+          <span class="txt">ຕ້ອງຂໍເງິນຄືນຈາກຄອບຄົວ<small>ເຊັ່ນ ຄ່າຮຽນ, ຄ່າປຶ້ມ, ລາຍຈ່າຍພິເສດ</small></span>
+          <span class="switch"><input type="checkbox" id="fClaim" role="switch" ${f.is_claim ? "checked" : ""}><span></span></span>
+        </label>
 
         <div id="claimBox" class="${f.is_claim ? "" : "hidden"}">
           <div class="field">
