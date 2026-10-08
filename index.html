@@ -140,8 +140,8 @@ nav.bottom .wrap{display:grid;grid-template-columns:1fr 1fr 76px 1fr;align-items
 .switch-row .txt small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .switch{position:relative;width:52px;height:32px;flex:none}
 .switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
-.switch span{position:absolute;inset:0;pointer-events:none;background:var(--line);border-radius:999px;transition:.2s}
-.switch span::after{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch span{position:absolute;inset:0;pointer-events:none;background:var(--line);border-radius:999px;transition:background .12s}
+.switch span::after{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .switch input:checked+span{background:var(--red)}
 .switch input:checked+span::after{transform:translateX(20px)}
 .switch input:focus-visible+span{outline:2px solid var(--red);outline-offset:2px}
@@ -775,7 +775,21 @@ async function viewReceipt(path) {
   document.body.appendChild(v);
 }
 
-function compressImage(file, maxSide = 1600, quality = 0.8) {
+async function compressImage(file, maxSide = 1280, quality = 0.72) {
+  // ໄວກວ່າ: ຖອດລະຫັດຮູບນອກ main thread ຖ້າ browser ຮອງຮັບ
+  if (window.createImageBitmap) {
+    try {
+      const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+      const scale = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
+      const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      c.getContext("2d").drawImage(bmp, 0, 0, w, h);
+      bmp.close && bmp.close();
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", quality));
+      if (blob) return blob;
+    } catch (_) { /* fall back below */ }
+  }
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -930,6 +944,7 @@ function openForm(exp) {
       const oldPath = f.receipt_path;
       if (!isClaim || removeReceipt) receipt_path = null;
       if (isClaim && newFile) {
+        save.textContent = "ກຳລັງອັບໂຫຼດຮູບ...";
         const path = `${date.slice(0, 7)}/${crypto.randomUUID()}.jpg`;
         const { error: upErr } = await sb.storage.from(BUCKET).upload(path, newFile, { contentType: "image/jpeg" });
         if (upErr) throw upErr;
@@ -945,6 +960,7 @@ function openForm(exp) {
         reimbursed_at: status === "reimbursed" ? (exp?.reimbursed_at || new Date().toISOString()) : null,
         receipt_path,
       };
+      save.textContent = "ກຳລັງບັນທຶກ...";
       let row;
       if (isEdit) {
         const { data, error } = await sb.from("expenses").update(payload).eq("id", exp.id).select().single();
@@ -955,7 +971,8 @@ function openForm(exp) {
         if (error) throw error; row = data;
         state.expenses.unshift(row);
       }
-      if (oldPath && oldPath !== receipt_path) await sb.storage.from(BUCKET).remove([oldPath]);
+      // ລຶບຮູບເກົ່າຢູ່ເບື້ອງຫຼັງ ບໍ່ຕ້ອງລໍ
+      if (oldPath && oldPath !== receipt_path) sb.storage.from(BUCKET).remove([oldPath]).catch(() => {});
       state.expenses.sort((a, b) => b.spent_on.localeCompare(a.spent_on) || b.created_at.localeCompare(a.created_at));
       close();
       toast(isEdit ? "ແກ້ໄຂແລ້ວ" : "ບັນທຶກແລ້ວ");
