@@ -395,7 +395,13 @@ async function loadAll() {
     render();
   } catch (e) {
     console.error(e);
-    $("#main").innerHTML = `<div class="empty">ໂຫຼດຂໍ້ມູນບໍ່ໄດ້ — ກວດອິນເຕີເນັດ / VPN ແລ້ວລອງໃໝ່<br><br><button class="btn ghost" onclick="location.reload()">ລອງໃໝ່</button></div>`;
+    const msg = String(e?.message || e || "");
+    const noTable = /does not exist|schema cache|Could not find the table/i.test(msg);
+    $("#main").innerHTML = `<div class="empty">${noTable
+      ? "ຍັງບໍ່ໄດ້ສ້າງຕາຕະລາງ — ກະລຸນາຣັນ supabase/schema.sql ໃນ SQL Editor ກ່ອນ"
+      : "ໂຫຼດຂໍ້ມູນບໍ່ໄດ້ — ກວດອິນເຕີເນັດ / VPN ແລ້ວລອງໃໝ່"}
+      <br><small style="display:block;margin-top:8px;font-size:12px;opacity:.8">${esc(msg)}</small>
+      <br><button class="btn ghost" onclick="location.reload()">ລອງໃໝ່</button></div>`;
   }
 }
 $("#refreshBtn").addEventListener("click", loadAll);
