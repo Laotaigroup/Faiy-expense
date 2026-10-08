@@ -47,7 +47,7 @@
 1. สร้าง repository ใหม่บน GitHub เช่น `faiy-expense` (เลือก Public หรือ Private ก็ได้ แต่ Private ต้องใช้แผน GitHub Pro ถึงจะเปิด Pages ได้)
 2. อัปโหลดไฟล์ทั้งหมดในโฟลเดอร์นี้ขึ้นไป (กด **Add file → Upload files** แล้วลากไฟล์ใส่)
 3. ไปที่ **Settings → Pages** → Source: **Deploy from a branch** → Branch: `main` / `(root)` → **Save**
-4. รอประมาณ 1 นาที จะได้ลิงก์รูปแบบ `https://<ชื่อ-github>.github.io/faiy-expense/`
+4. รอประมาณ 1 นาที จะได้ลิงก์รูปแบบ `https://<ชื่อ-github>.github.io/Faiy-expense/`
 
 ### 5. ติดตั้งบนมือถือน้อง
 - **iPhone**: เปิดลิงก์ใน Safari → ปุ่มแชร์ → **Add to Home Screen**
